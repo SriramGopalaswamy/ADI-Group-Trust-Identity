@@ -34,10 +34,29 @@ Upload this file to the root of your bucket.
 }
 ```
 
-## 3. Deployment
+## 3. Storage CORS Configuration (MANDATORY)
+**CRITICAL:** To allow browsers to download files via signed URLs, you MUST apply this CORS policy to your bucket. Without this, the download button may fail silently.
+
+1. Create a file named `cors.json`:
+```json
+[
+    {
+      "origin": ["*"],
+      "method": ["GET", "HEAD", "OPTIONS"],
+      "responseHeader": ["Content-Type", "Content-Disposition"],
+      "maxAgeSeconds": 3600
+    }
+]
+```
+2. Run this command in Google Cloud Shell:
+```bash
+gcloud storage buckets update gs://adi-bharat-reports --cors-file=cors.json
+```
+
+## 4. Deployment
 1. **Frontend**: Deploy the React app to Firebase Hosting or Vercel.
 2. **Backend**: Deploy the code in `backend/cloud_function.js` to Google Cloud Functions.
 3. **Connect**: Update `services/verificationService.ts` to call your real Cloud Function URL instead of the mock logic.
 
-## 4. Gemini Feature
+## 5. Gemini Feature
 Ensure `process.env.API_KEY` is set in your frontend environment variables with a valid Google Gemini API key that has access to `gemini-2.5-flash-image`.

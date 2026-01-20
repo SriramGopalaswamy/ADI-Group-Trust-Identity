@@ -79,6 +79,35 @@ const BatchVerification: React.FC = () => {
     setResult(null);
   };
 
+  const handleDownloadReport = (e: React.MouseEvent<HTMLButtonElement>, url: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Prevent handling of mock/invalid URLs
+    if (!url || url === '#' || url.trim() === '') {
+      console.warn("Invalid report URL");
+      return;
+    }
+
+    try {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      
+      // Add download attribute if possible, though backend Content-Disposition is primary
+      link.setAttribute('download', 'ADI_Bharat_Test_Report.pdf');
+      
+      document.body.appendChild(link);
+      link.click();
+      
+      // Immediate cleanup
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error("Download failed programmatically", err);
+    }
+  };
+
   if (status === 'SUCCESS' && result?.data) {
     return (
       <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-xl overflow-hidden animate-fade-in-up">
@@ -108,7 +137,8 @@ const BatchVerification: React.FC = () => {
 
           <div className="pt-4">
              <button 
-               onClick={() => alert("Downloading PDF... (Mock Action)")}
+               type="button"
+               onClick={(e) => result.data?.reportUrl && handleDownloadReport(e, result.data.reportUrl)}
                className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98]"
              >
                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +151,11 @@ const BatchVerification: React.FC = () => {
              </p>
           </div>
 
-          <button onClick={handleReset} className="w-full text-green-600 font-medium text-sm hover:underline">
+          <button 
+            type="button"
+            onClick={handleReset} 
+            className="w-full text-green-600 font-medium text-sm hover:underline cursor-pointer"
+          >
             Scan another product
           </button>
         </div>

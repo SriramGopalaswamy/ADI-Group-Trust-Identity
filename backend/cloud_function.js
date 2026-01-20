@@ -56,7 +56,6 @@ exports.verifyBatch = async (req, res) => {
     const bucket = storage.bucket(bucketName);
 
     // 4. Fetch Batch Index
-    // In high scale, store this in Firestore or Cloud SQL instead of a JSON file
     const file = bucket.file('batch-index.json');
     const [content] = await file.download();
     const batchIndex = JSON.parse(content.toString());
@@ -77,15 +76,23 @@ exports.verifyBatch = async (req, res) => {
       return res.status(500).json({ error: 'Report file missing from system' });
     }
 
-    const [url] = await reportFile.getSignedUrl({
+    // Configuration for V4 Signed URL
+    // MANDATORY FIX: Force download via Content-Disposition
+    const options = {
       version: 'v4',
       action: 'read',
       expires: Date.now() + 15 * 60 * 1000, // 15 minutes
-    });
+      responseDisposition: 'attachment; filename="ADI_Bharat_Test_Report.pdf"',
+      responseType: 'application/pdf',
+    };
+
+    const [url] = await reportFile.getSignedUrl(options);
 
     // 6. Return Success
+    // 'downloadUrl' matches the prompt requirements, mapped to 'reportUrl' for frontend compatibility
     return res.status(200).json({
       success: true,
+      downloadUrl: url, 
       data: {
         code: batchData.code,
         productName: batchData.productName,

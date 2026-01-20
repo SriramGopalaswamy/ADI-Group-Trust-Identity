@@ -22,13 +22,13 @@ Upload this file to the root of your bucket.
   "ADIF5HW825": {
     "code": "ADIF5HW825",
     "productName": "Tomato Pulp",
-    "testDate": "2025-10-12",
+    "testDate": "22/09/2025",
     "reportPath": "products/tomato-pulp/ADIF5HW825_Analysis.pdf"
   },
   "ADIT28WS25": {
     "code": "ADIT28WS25",
     "productName": "Wheat Processed",
-    "testDate": "2025-10-15",
+    "testDate": "22/09/2025",
     "reportPath": "products/wheat-processed/ADIT28WS25_Analysis.pdf"
   }
 }

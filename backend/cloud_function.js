@@ -27,10 +27,10 @@ exports.verifyBatch = async (req, res) => {
   }
 
   try {
-    const { fullName, mobile, email, batchCode } = req.body;
+    const { fullName, mobile, email, batchCode, location } = req.body;
 
     // 2. Input Validation
-    if (!fullName || !mobile || !email || !batchCode) {
+    if (!fullName || !mobile || !batchCode) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -38,7 +38,8 @@ exports.verifyBatch = async (req, res) => {
       return res.status(400).json({ error: 'Invalid Indian mobile number' });
     }
 
-    if (!isValidEmail(email)) {
+    // Email is optional, but check validity if provided
+    if (email && email.trim() !== '' && !isValidEmail(email)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
@@ -46,8 +47,9 @@ exports.verifyBatch = async (req, res) => {
     const entry = {
       timestamp: new Date().toISOString(),
       batchCode,
-      email, // PII: In production, consider hashing this
+      email: email || 'NOT_PROVIDED',
       mobile, // PII: In production, consider hashing this
+      location: location || 'NOT_PROVIDED',
       userAgent: req.get('user-agent'),
     };
     console.log(JSON.stringify(entry));

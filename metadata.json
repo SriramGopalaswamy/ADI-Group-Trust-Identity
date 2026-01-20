@@ -1,0 +1,7 @@
+{
+  "name": "ADI Bharat Consumer Portal",
+  "description": "Consumer verification system for ADI Bharat food products with AI-powered packaging interaction.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

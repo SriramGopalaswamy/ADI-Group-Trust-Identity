@@ -1,11 +1,43 @@
-<div align="center">
+# ADI Bharat System Setup
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+## 1. Google Cloud Storage Structure
+Create a bucket named `adi-bharat-reports`.
 
-  <h1>Built with AI Studio</h2>
+**Folder Structure:**
+```
+/adi-bharat-reports
+  /batch-index.json
+  /products
+    /tomato-pulp
+      /ADIF5HW825_Analysis.pdf
+    /wheat-processed
+      /ADIT28WS25_Analysis.pdf
+```
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## 2. Batch Index Mapping (`batch-index.json`)
+Upload this file to the root of your bucket.
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+```json
+{
+  "ADIF5HW825": {
+    "code": "ADIF5HW825",
+    "productName": "Tomato Pulp",
+    "testDate": "2025-10-12",
+    "reportPath": "products/tomato-pulp/ADIF5HW825_Analysis.pdf"
+  },
+  "ADIT28WS25": {
+    "code": "ADIT28WS25",
+    "productName": "Wheat Processed",
+    "testDate": "2025-10-15",
+    "reportPath": "products/wheat-processed/ADIT28WS25_Analysis.pdf"
+  }
+}
+```
 
-</div>
+## 3. Deployment
+1. **Frontend**: Deploy the React app to Firebase Hosting or Vercel.
+2. **Backend**: Deploy the code in `backend/cloud_function.js` to Google Cloud Functions.
+3. **Connect**: Update `services/verificationService.ts` to call your real Cloud Function URL instead of the mock logic.
+
+## 4. Gemini Feature
+Ensure `process.env.API_KEY` is set in your frontend environment variables with a valid Google Gemini API key that has access to `gemini-2.5-flash-image`.
